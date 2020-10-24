@@ -1,31 +1,16 @@
 const fs = require('fs');
-const {google} = require('googleapis');
-const youtube = google.youtube('v3');
+const YouTubeDataAPI = require('./YouTubeDataAPI');
 const KANATA_ID = 'UCZlDXzGoo7d44bwdNObFacg';
 
 // read API key from storage
-fs.readFile('key/youtube.key', 'utf-8', function error(err, data) {
+fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
     if (err) throw err;
-    start(data);
+    start(key);
 });
 
-// starts the application
 function start(key) {
-    // find information on Amane Kanata's channel
-    youtube.channels.list({
-        key: key,
-        part: 'snippet,statistics',
-        id: KANATA_ID,
-    }, function onResponse(err, response) {
-        // on error
-        if (err) {
-            console.log('Encountered an error: ' + err);
-            return;
-        }
-
-        // log the response
-        const channel = response.data.items[0];
-        console.log(channel.snippet.title);
-        console.log(channel.statistics.subscriberCount);
+    let youtube = new YouTubeDataAPI(key);
+    youtube.getInfoForChannel(KANATA_ID, function Callback(info) {
+        console.log(info);
     });
 }
