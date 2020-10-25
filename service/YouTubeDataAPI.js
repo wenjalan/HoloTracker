@@ -1,6 +1,9 @@
 const {google} = require('googleapis');
 const youtube = google.youtube('v3');
+const {Channel} = require('./Channel');
+const Video = require('./Video');
 
+// main interface with the YouTube Data API
 class YouTubeDataAPI {
 
     // constructor
@@ -9,9 +12,9 @@ class YouTubeDataAPI {
         this.API_KEY = keyCredential;
     }
 
-    // returns information about a talent's YouTube channel
+    // returns a Channel object representing a YouTube channel
     // channelId: the id of their youtube channel, can be found in their channel URL
-    getInfoForChannel(channelId, callback) {
+    getChannel(channelId, callback) {
         // make a request to YouTube
         youtube.channels.list({
             key: this.API_KEY,
@@ -26,17 +29,17 @@ class YouTubeDataAPI {
             }
 
             // retrieve the data
-            let channel = response.data.items[0];
+            let channel = new Channel(response.data.items[0]);
             
-            // otherwise, return some basic information about the channel
-            let info = {
-                name: channel.snippet.title,
-                subscriberCount: channel.statistics.subscriberCount,
-            };
-
-            callback(info);
+            // return a Channel object
+            callback(channel);
         });
     }
+
+    getVideo(videoId, callback) {
+
+    }
+
 }
 
 module.exports = YouTubeDataAPI;

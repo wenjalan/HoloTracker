@@ -5,7 +5,7 @@
   "main": "HoloTrackerService.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node HoloTrackerService.js"
+    "start": "cls && node HoloTrackerService.js"
   },
   "author": "",
   "license": "ISC",
