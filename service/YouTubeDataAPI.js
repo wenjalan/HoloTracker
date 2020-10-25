@@ -1,6 +1,6 @@
 const {google} = require('googleapis');
 const youtube = google.youtube('v3');
-const {Channel} = require('./Channel');
+const Channel = require('./Channel');
 const Video = require('./Video');
 
 // main interface with the YouTube Data API
@@ -18,7 +18,7 @@ class YouTubeDataAPI {
         // make a request to YouTube
         youtube.channels.list({
             key: this.API_KEY,
-            part: 'snippet,statistics',
+            part: 'snippet,statistics,contentDetails',
             id: channelId,
         }, function onResponse(error, response) {
             // if there was an error, report it
@@ -29,7 +29,15 @@ class YouTubeDataAPI {
             }
 
             // retrieve the data
-            let channel = new Channel(response.data.items[0]);
+            // for some reason the async nature of JavaScript says I can't just
+            // pass this data object through to the Channel constructor, so we do it explicitly
+            let data = response.data.items[0];
+            let channel = new Channel({
+                title: data.snippet.title,
+                id: data.id,
+                subcount: data.statistics.subscriberCount,
+                uploadsPlaylistId: data.contentDetails.relatedPlaylists.uploads,
+            });
             
             // return a Channel object
             callback(channel);
@@ -37,7 +45,33 @@ class YouTubeDataAPI {
     }
 
     getVideo(videoId, callback) {
+        // make a request to YouTube
+        youtube.videos.list({
+            key: this.API_KEY,
+            part: 'snippet,contentDetails,statistics',
+            id: videoId,
+        }, function onResponse(error, response) {
+            // if there was an error, log it
+            if (error) {
+                console.error('Encountered an error while retrieving video info for video id ' + videoId);
+                console.error(error);
+                return;
+            }
 
+            // unpack the data
+            let data = response.data.items[0];
+            let video = new Video({
+                title: data.snippet.title,
+                description: data.snippet.description,
+                id: data.id,
+                thumbnail: data.snippet.thumbnails.default,
+                views: data.statistics.viewCount,
+                duration: data.contentDetails.duration,
+            });
+
+            // return a Video object
+            callback(video);
+        });
     }
 
 }
