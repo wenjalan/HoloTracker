@@ -14,8 +14,8 @@ fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
 function start(key) {
     console.log('Starting HoloTracker...');
     let youtube = new YouTubeDataAPI(key);
-    // testGetChannel(youtube);
-    // testGetVideo(youtube);
+    testGetChannel(youtube);
+    testGetVideo(youtube);
 }
 
 function testGetChannel(youtube) {

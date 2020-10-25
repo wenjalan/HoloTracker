@@ -14,6 +14,7 @@ class YouTubeDataAPI {
 
     // returns a Channel object representing a YouTube channel
     // channelId: the id of their youtube channel, can be found in their channel URL
+    // callback: the function to receive the Channel object
     getChannel(channelId, callback) {
         // make a request to YouTube
         youtube.channels.list({
@@ -44,6 +45,9 @@ class YouTubeDataAPI {
         });
     }
 
+    // returns a Video object representing a YouTube video
+    // videoId: the id of the video
+    // callback: the function to receive the Video object
     getVideo(videoId, callback) {
         // make a request to YouTube
         youtube.videos.list({
