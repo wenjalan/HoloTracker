@@ -1,7 +1,5 @@
 const fs = require('fs');
-const Channel = require('./Channel');
 const YouTubeDataAPI = require('./YouTubeDataAPI');
-const Video = require('./Video');
 const KANATA_ID = 'UCZlDXzGoo7d44bwdNObFacg';
 const FUBUKI_SCATMAN_ID = 'Y1So82y91Yw';
 
