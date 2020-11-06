@@ -5,8 +5,6 @@ const Video = require('./Video');
 const KANATA_ID = 'UCZlDXzGoo7d44bwdNObFacg';
 const FUBUKI_SCATMAN_ID = 'Y1So82y91Yw';
 
-let c = new Channel();
-
 // read API key from storage
 fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
     if (err) throw err;
