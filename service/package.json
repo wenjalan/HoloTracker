@@ -2,10 +2,10 @@
   "name": "service",
   "version": "1.0.0",
   "description": "Web service for HoloTracker",
-  "main": "HoloTrackerService.js",
+  "main": "./src/HoloTrackerService.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cls && node HoloTrackerService.js"
+    "start": "cls && node ./src/HoloTrackerService.js"
   },
   "author": "",
   "license": "ISC",

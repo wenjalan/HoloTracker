@@ -1,10 +1,10 @@
 const {google} = require('googleapis');
 const youtube = google.youtube('v3');
-const Channel = require('./Channel');
-const Video = require('./Video');
+const Channel = require('./model/Channel');
+const Video = require('./model/Video');
 
 // main interface with the YouTube Data API
-class YouTubeDataAPI {
+class YouTubeManager {
 
     // constructor
     // keyCredential: the YouTube Data API key to use
@@ -80,4 +80,4 @@ class YouTubeDataAPI {
 
 }
 
-module.exports = YouTubeDataAPI;
+module.exports = YouTubeManager;

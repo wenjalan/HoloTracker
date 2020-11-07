@@ -6,6 +6,10 @@ class Channel {
         this.subcount = info.subcount;
         this.uploadsPlaylistId = info.uploadsPlaylistId;
     }
+
+    toString() {
+        return this.title + "(id:" + this.id + ")";
+    }
 }
 
 module.exports = Channel;

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const YouTubeDataAPI = require('./YouTubeDataAPI');
+const YouTubeDataAPI = require('./YouTubeManager');
 const KANATA_ID = 'UCZlDXzGoo7d44bwdNObFacg';
 const FUBUKI_SCATMAN_ID = 'Y1So82y91Yw';
 
@@ -19,7 +19,7 @@ function start(key) {
 function testGetChannel(youtube) {
     console.log('*** testGetChannel ***')
     youtube.getChannel(KANATA_ID, function Callback(channel) {
-        console.log(channel);
+        console.log(channel.toString());
     });
 }
 
