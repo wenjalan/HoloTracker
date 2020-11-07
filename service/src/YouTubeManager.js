@@ -87,7 +87,7 @@ class YouTubeManager {
     // returns an array of Videos containing the recent uploads of a provided channel
     // channel: a Channel object
     // amount: the number of videos to retrieve
-    async getRecentUploads(channel, amount, callback) {
+    async getRecentUploads(channel, amount) {
         return new Promise((resolve, reject) => {
             // get the Channel's latest uploads playlist from YouTube
             youtube.playlistItems.list({
@@ -113,7 +113,25 @@ class YouTubeManager {
                 resolve(Promise.all(promises));
             });
         });
+    }
 
+    // retrives several Channels at once
+    // channelIds: an array of channel ids to retrieve
+    // returns: a Promise containing an array of Channels
+    async getChannels(channelIds) {
+        // console.log('channelIds:' + channelIds);
+        let promises = [];
+        for (let id of channelIds) {
+            promises.push(this.getChannel(id));
+        }
+        return Promise.all(promises);
+    }
+
+    // retrieve ALL the videos on a Channel
+    // returns: an array of Videos
+    async getAllVideos(channel) {
+        // todo: actually return all the videos
+        return this.getRecentUploads(channel, 1000);
     }
 
 }

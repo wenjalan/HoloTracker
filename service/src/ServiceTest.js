@@ -1,7 +1,9 @@
 const fs = require('fs');
 const YouTubeDataAPI = require('./YouTubeManager');
+const HoloTrackerService = require('./HoloTrackerService')
 const KANATA_ID = 'UCZlDXzGoo7d44bwdNObFacg';
 const FUBUKI_SCATMAN_ID = 'Y1So82y91Yw';
+const COCO_THIGHS_ID = 'XxEFEjiAeM4';
 
 // read API key from storage
 fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
@@ -12,9 +14,11 @@ fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
 function start(key) {
     console.log('### Running tests...');
     let youtube = new YouTubeDataAPI(key);
-    testGetChannel(youtube);
-    testGetVideo(youtube);
-    testGetRecentUploads(youtube);
+    // testGetChannel(youtube);
+    // testGetVideo(youtube);
+    // testGetRecentUploads(youtube);
+    // testGetTranslationVideos();
+    testRefreshTranslations();
 }
 
 function testGetChannel(youtube) {
@@ -44,5 +48,19 @@ function testGetRecentUploads(youtube) {
                 console.log(video.title);
             }
         })
+    });
+}
+
+function testGetTranslationVideos() {
+    HoloTrackerService.getTranslationsFor(COCO_THIGHS_ID).then(translations => {
+        console.log(translations);
+    });
+}
+
+function testRefreshTranslations() {
+    HoloTrackerService.refreshTranslations()
+    .then((translations) => {
+        console.log('### Translations found:')
+        console.log(translations);
     });
 }
