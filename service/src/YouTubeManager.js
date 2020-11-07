@@ -26,8 +26,9 @@ class YouTubeManager {
                 // if there was an error, report it
                 if (error) {
                     console.error('Encountered an error while retrieving channel info for channel id ' + channelId);
-                    console.error(error);
+                    console.error(error.errors[0].message);
                     reject(error);
+                    return;
                 }
 
                 // retrieve the data

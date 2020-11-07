@@ -1,48 +1,52 @@
 const fs = require('fs');
-const YouTubeDataAPI = require('./YouTubeManager');
-const KANATA_ID = 'UCZlDXzGoo7d44bwdNObFacg';
-const FUBUKI_SCATMAN_ID = 'Y1So82y91Yw';
+const express = require('express');
+const app = express();
+const port = 3000;
+const YouTubeManager = require('./YouTubeManager');
 
-// read API key from storage
+// read API key from storage and initialize YouTube
 fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
     if (err) throw err;
-    start(key);
-});
+    init(key);
+})
 
-function start(key) {
-    console.log('Starting HoloTracker...');
-    let youtube = new YouTubeDataAPI(key);
-    testGetChannel(youtube);
-    testGetVideo(youtube);
-    testGetRecentUploads(youtube);
-}
+function init(key) {
+    // init YouTube
+    this.youtube = new YouTubeManager(key);
 
-function testGetChannel(youtube) {
-    youtube.getChannel(KANATA_ID)
-    .then(channel => {
-        console.log('### testGetChannel()');
-        console.log(channel.toString());
+    // start web service
+    // channel endpoint
+    app.get('/channel', (req, res) => {
+        console.log('CHANNEL GET REQUEST FROM ' + req.connection.remoteAddress);
+        let id = req.query.id;
+        youtube.getChannel(id)
+        .then(c => res.send(c))
+        .catch(error => res.send(error));
+    });
+
+    // video endpoint
+    app.get('/video', (req, res) => {
+        console.log('VIDEO GET REQUEST FROM ' + req.connection.remoteAddress);
+        let id = req.query.id;
+        this.youtube.getVideo(id)
+        .then(v => res.send(v))
+        .catch(error => res.send(error));
+    });
+
+    // recent uploads endpoint
+    app.get('/recent', (req, res) => {
+        console.log('RECENT GET REQUEST FROM ' + req.connection.remoteAddress);
+        let channelId = req.query.channelId;
+        let amount = req.query.amount;
+        this.youtube.getChannel(channelId)
+        .then(channel => {
+            this.youtube.getRecentUploads(channel, amount)
+            .then(videos => res.send(videos));
+        }).catch(error => res.send(error));
+    });
+
+    app.listen(port, () => {
+        console.log('Started at http://localhost:' + port + '/');
     });
 }
 
-function testGetVideo(youtube) {
-    youtube.getVideo(FUBUKI_SCATMAN_ID)
-    .then(video => {
-        console.log('### testGetVideo()');
-        console.log(video.toString());
-    });
-}
-
-function testGetRecentUploads(youtube) {
-    youtube.getChannel(KANATA_ID)
-    .then(kanataCh => {
-        youtube.getRecentUploads(kanataCh, 5)
-        .then(videos => {
-            console.log('### testGetRecentUploads')
-            console.log('retrieved ' + videos.length + ' recent uploads');
-            for (let video of videos) {
-                console.log(video.title);
-            }
-        })
-    });
-}

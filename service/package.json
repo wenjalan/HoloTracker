@@ -4,12 +4,13 @@
   "description": "Web service for HoloTracker",
   "main": "./src/HoloTrackerService.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cls && node ./src/HoloTrackerService.js"
+    "start": "cls && node ./src/HoloTrackerService.js",
+    "test": "cls && node ./src/ServiceTest.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "googleapis": "^61.0.0",
     "install": "^0.13.0",
     "npm": "^6.14.8"
