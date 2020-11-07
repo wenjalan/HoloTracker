@@ -8,7 +8,7 @@ class Channel {
     }
 
     toString() {
-        return this.title + "(id:" + this.id + ")";
+        return "Channel(title:" + this.title + ",id:" + this.id + ")";
     }
 }
 

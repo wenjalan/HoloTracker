@@ -7,6 +7,10 @@ class Video {
         this.id = info.id;
         this.duration = info.duration;
     }
+
+    toString() {
+        return "Video(title:" + this.title + ",id:" + this.id + ")";
+    }
 }
 
 module.exports = Video;

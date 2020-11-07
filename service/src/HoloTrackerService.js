@@ -14,18 +14,35 @@ function start(key) {
     let youtube = new YouTubeDataAPI(key);
     testGetChannel(youtube);
     testGetVideo(youtube);
+    testGetRecentUploads(youtube);
 }
 
 function testGetChannel(youtube) {
-    console.log('*** testGetChannel ***')
-    youtube.getChannel(KANATA_ID, function Callback(channel) {
+    youtube.getChannel(KANATA_ID)
+    .then(channel => {
+        console.log('### testGetChannel()');
         console.log(channel.toString());
     });
 }
 
 function testGetVideo(youtube) {
-    console.log('*** testGetVideo ***')
-    youtube.getVideo(FUBUKI_SCATMAN_ID, function Callback(video) {
-        console.log(video);
+    youtube.getVideo(FUBUKI_SCATMAN_ID)
+    .then(video => {
+        console.log('### testGetVideo()');
+        console.log(video.toString());
+    });
+}
+
+function testGetRecentUploads(youtube) {
+    youtube.getChannel(KANATA_ID)
+    .then(kanataCh => {
+        youtube.getRecentUploads(kanataCh, 5)
+        .then(videos => {
+            console.log('### testGetRecentUploads')
+            console.log('retrieved ' + videos.length + ' recent uploads');
+            for (let video of videos) {
+                console.log(video.title);
+            }
+        })
     });
 }
