@@ -95,16 +95,53 @@ class YouTubeManager {
                 part: "snippet",
                 playlistId: channel.uploadsPlaylistId,
                 maxResults: amount,
-            }, (error, response) => {
+            }, async (error, response) => {
                 if (error) {
-                    console.error("Encountered an error while retrieving an uploads playlist");
+                    console.error("Encountered an error while retrieving an uploads playlist (1)");
                     console.error(error);
                     reject(error);
                 }
 
                 // retrieve video data
                 let promises = [];
-                let items = response.data.items;
+                let items = [];
+                items.push(...response.data.items);
+                let nextPageToken = response.data.nextPageToken;
+                
+                // if we need to retrieve more videos, do so
+                let retrievedAll = false;
+                while (items.length <= amount && !retrievedAll) {
+                    let toRetrieve = Math.min(50, amount - items.length);
+                    if (toRetrieve == 0) {
+                        break;
+                    }
+                    // console.log('getting ' + toRetrieve + ' more items...');
+                    await youtube.playlistItems.list({
+                        key: this.API_KEY,
+                        part: 'snippet',
+                        playlistId: channel.uploadsPlaylistId,
+                        maxResults: toRetrieve,
+                        pageToken: nextPageToken,
+                    }).then((response) => {
+                        // retrieve the items and add to our list
+                        let retrievedItems = response.data.items;
+
+                        // push all items
+                        items.push(...retrievedItems);
+
+                        // check if we've seen all the videos
+                        if (response.data.nextPageToken == null) {
+                            retrievedAll = true;
+                        }
+                        else {
+                            nextPageToken = response.data.nextPageToken;
+                        }
+                    });
+                }
+
+                // console.log('found ' + items.length + ' videos in total');
+
+                // get video objects for all retrieved videos
                 for (let i = 0; i < items.length; i++) {
                     let item = items[i];
                     promises.push(this.getVideo(item.snippet.resourceId.videoId));
@@ -128,10 +165,11 @@ class YouTubeManager {
     }
 
     // retrieve ALL the videos on a Channel
+    // channel: a Channel object
     // returns: an array of Videos
     async getAllVideos(channel) {
         // todo: actually return all the videos
-        return this.getRecentUploads(channel, 1000);
+        return this.getRecentUploads(channel, 9999);
     }
 
 }

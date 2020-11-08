@@ -100,7 +100,7 @@ async function refreshTranslations() {
 // scans talent channels for new source videos
 async function scanTalents() {
     return new Promise((resolve, reject) => {
-        fs.readFile('assets/talents.csv', 'utf-8', (error, data) => {
+        fs.readFile('assets/talents.json', 'utf-8', (error, data) => {
             // on error
             if (error) {
                 console.error('Error loading talent channel ids');
@@ -109,7 +109,8 @@ async function scanTalents() {
             }
 
             // get talent Channels
-            let talentIds = data.split(',');
+            let talentsList = JSON.parse(data);
+            let talentIds = Object.values(talentsList);
             this.youtube.getChannels(talentIds)
             .then(async (channels) => {
                 // for each channel
@@ -134,7 +135,7 @@ async function scanTalents() {
 // scans translator channels for new translation videos
 async function scanTranslators() {
     return new Promise((resolve, reject) => {
-        fs.readFile('assets/translators.csv', 'utf-8', (error, data) => {
+        fs.readFile('assets/translators.json', 'utf-8', (error, data) => {
             // on error
             if (error) {
                 console.error('Error loading translator channel ids');
@@ -143,7 +144,11 @@ async function scanTranslators() {
             }
     
             // get translator Channels
-            let translatorIds = data.split(',');
+            let translatorsList = JSON.parse(data);
+            let translatorIds = Object.values(translatorsList);
+            console.log(translatorIds);
+
+            // get their channels
             this.youtube.getChannels(translatorIds)
             .then(async (channels) => {
                 // for each channel, process their uploads for translations
