@@ -18,8 +18,10 @@ function start(key) {
     // testGetVideo(youtube);
     // testGetRecentUploads(youtube, 169);
     // testGetTranslationVideos();
-    testRefreshTranslations();
+    // testRefreshTranslations();
     // testGetAllVideos(youtube);
+    // testRefreshCache10Uploads(youtube);
+    testReadCache();
 }
 
 function testGetChannel(youtube) {
@@ -89,4 +91,25 @@ function testGetAllVideos(youtube) {
             }
         });
     })
+}
+
+function testRefreshCache10Uploads(youtube) {
+    youtube.getChannel(KANATA_ID)
+    .then(c => {
+        youtube.getRecentUploads(c, 10)
+        .then(videos => {
+            HoloTrackerService.updateCache(videos);
+        })
+    })
+}
+
+function testReadCache() {
+    HoloTrackerService.readCache()
+    .then(cache => {
+        console.log('Loaded ' + Object.keys(cache).length + ' video entities:');
+        for (let id in cache) {
+            let video = cache[id];
+            console.log("[" + video.id + "] " + video.title);
+        }
+    });
 }

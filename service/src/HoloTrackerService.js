@@ -14,6 +14,7 @@ fs.readFile('key/youtube.key', 'utf-8', function error(err, key) {
     init(key);
 })
 
+// API endpoints
 function init(key) {
     // init YouTube
     this.youtube = new YouTubeManager(key);
@@ -181,5 +182,63 @@ async function scanTranslators() {
     });
 }
 
+// updates the cached videos
+// videos: an array of Videos to cache
+function updateCache(videos) {
+    console.log('Updating cache with ' + videos.length + ' videos');
+    // get the currently cached videos
+    readCache()
+    .then(oldCache => {
+        // console.log('Loaded ' + Object.keys(oldCache).length + ' Video entities from cache');
+        // for each video, put the video id to its video object
+        for (video of videos) {
+            let id = video.id;
+            oldCache[id] = video;
+        }
+
+        // save the cache map
+        // console.log('Writing ' + Object.keys(oldCache).length + ' Video entities to cache');
+        // throw new Error('Execution stopped by developer');
+        writeCache(oldCache);
+    });
+}
+
+// loads a map of Video IDs mapped to their Video objects from the cache
+// returns: an Object with ids mapped to Video objects
+function readCache() {
+    return new Promise((resolve, reject) => {
+        fs.readFile('cache/videos.cache', 'utf8', (error, data) => {
+            if (error) {
+                console.error('Error reading cache from disk');
+                console.error(e);
+                reject(error);
+            }
+            let map = JSON.parse(data);
+            console.log('Read ' + Object.keys(map).length + ' Video entities from cache');
+            resolve(map);
+        })
+    });
+}
+
+// writes a map of Video IDs mapped to their Video objects to the cache
+function writeCache(map) {
+    return new Promise((resolve, reject) => {
+        // get the JSON
+        let json = JSON.stringify(map);
+        // write the file
+        fs.writeFile('cache/videos.cache', json, 'utf8', error => {
+            if (error) {
+                console.error('Error saving cache to disk');
+                console.error(e);
+                reject(error);
+            }
+            else {
+                console.log('Wrote ' + Object.keys(map).length + ' entities to cache');
+                resolve();
+            }
+        });
+    });
+}
+
 // testing, comment out for production
-module.exports = {getTranslationsFor, refreshTranslations};
+module.exports = {getTranslationsFor, refreshTranslations, updateCache, readCache, writeCache};
