@@ -4,7 +4,7 @@
   "description": "Web service for HoloTracker",
   "main": "./src/HoloTrackerService.js",
   "scripts": {
-    "start": "cls && node ./src/HoloTrackerService.js",
+    "start": "cls && node ./src/HoloTrackerService.js"
   },
   "author": "",
   "license": "ISC",
