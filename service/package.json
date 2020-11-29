@@ -5,7 +5,6 @@
   "main": "./src/HoloTrackerService.js",
   "scripts": {
     "start": "cls && node ./src/HoloTrackerService.js",
-    "test": "cls && node ./src/ServiceTest.js"
   },
   "author": "",
   "license": "ISC",
