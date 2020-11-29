@@ -23,6 +23,7 @@ async function testGetChannel() {
 
 async function testGetPlaylistVideos() {
     console.log('### testGetPlaylistVideos');
-    let videos = await YouTubeManager.getVideosFromPlaylistId(KANATA_UPLOADS_ID, 5);
+    let videos = await YouTubeManager.getVideosFromPlaylistId(KANATA_UPLOADS_ID, 51);
     console.log(videos);
+    console.log('Total videos: ' + videos.length);
 }
